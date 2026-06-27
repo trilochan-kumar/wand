@@ -63,7 +63,7 @@ def main():
                 
                 # Render tracking visualization
                 if config.SHOW_WINDOW:
-                    draw_landmarks_and_highlight(frame, hand_analysis.raw_landmarks)
+                    draw_landmarks_and_highlight(frame, hand_analysis.raw_landmarks, motion_engine.is_clicking or motion_engine.click_cooldown > 0)
 
             # Draw Active Tracking Area bounding box
             if config.SHOW_WINDOW and motion_engine.current_box_corners:

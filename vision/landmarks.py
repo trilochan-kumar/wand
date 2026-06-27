@@ -71,9 +71,10 @@ def parse_results(results) -> HandAnalysisResult:
         raw_landmarks=landmarks
     )
 
-def draw_landmarks_and_highlight(frame, landmarks) -> None:
+def draw_landmarks_and_highlight(frame, landmarks, is_clicking: bool = False) -> None:
     """
     Draws the hand skeletal layout and overlays a highlight at the index fingertip.
+    Changes highlight color based on click state.
     """
     if not landmarks:
         return
@@ -96,10 +97,13 @@ def draw_landmarks_and_highlight(frame, landmarks) -> None:
     cx = int(index_tip.x * width)
     cy = int(index_tip.y * height)
     
+    # Set highlight color (Green if clicking, Yellow otherwise)
+    highlight_color = (0, 255, 0) if is_clicking else config.FINGERTIP_COLOR
+    
     cv2.circle(
         frame,
         (cx, cy),
         config.FINGERTIP_RADIUS,
-        config.FINGERTIP_COLOR,
+        highlight_color,
         cv2.FILLED
     )

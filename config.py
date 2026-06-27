@@ -31,6 +31,12 @@ DYNAMIC_BOX_SCALE_Y = 1.1
 # Biomechanical Skew: Pulls difficult corners closer to the center (0.0 = Rectangle, 0.5 = Diamond-like)
 BIOMECHANICAL_SKEW = 0.4
 
+# Vertical Tap Gesture Settings
+Y_TAP_THRESHOLD = 0.020            # Absolute velocity threshold for a sharp up or down vertical flick
+CLICK_COOLDOWN_FRAMES = 15         # Lockout period after a click (~0.25 seconds)
+ANTI_DRIFT_FRAMES = 5              # How many frames back in time to freeze the cursor during a poke
+
+
 # One Euro Filter settings (Lower min_cutoff reduces jitter at low speed. Higher beta reduces lag at high speed)
 FILTER_MIN_CUTOFF = 0.0001
 FILTER_BETA = 0.7

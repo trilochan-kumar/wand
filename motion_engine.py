@@ -68,6 +68,12 @@ class MotionEngine:
         self.box_cx = None
         self.box_cy = None
         self.current_box_corners = None
+        
+        # Y-Axis and Anti-Drift State
+        self.y_history = []
+        self.xy_history = []  # Stores (screen_x, screen_y)
+        self.click_cooldown = 0
+        self.is_clicking = False
 
     def smoothstep(self, x: float) -> float:
         """Applies a smoothstep curve (3x^2 - 2x^3) to decelerate near 0.0 and 1.0"""
@@ -77,7 +83,8 @@ class MotionEngine:
     def process(self, norm_x: float, norm_y: float, hand_size_norm: float, handedness: str) -> tuple[int, int]:
         """
         Translates normalized coordinates [0.0, 1.0] to physical screen coordinates.
-        Applies Biomechanical Parallelogram scaling, mapping, smoothstep, and filtering.
+        Applies Dynamic Box scaling (push-mechanic), Biomechanical Skewing, and One Euro filtering.
+        Detects Y-axis tap gestures and freezes coordinates using Anti-Drift.
         """
         W = (hand_size_norm * config.DYNAMIC_BOX_SCALE_X) / 2.0
         H = (hand_size_norm * config.DYNAMIC_BOX_SCALE_Y) / 2.0
@@ -182,6 +189,37 @@ class MotionEngine:
         # Map normalized coordinate directly to pixel dimensions, expanded by margin
         screen_x = int(filtered_x * (self.screen_width + margin * 2) - margin)
         screen_y = int(filtered_y * (self.screen_height + margin * 2) - margin)
+
+        # Update History
+        self.xy_history.append((screen_x, screen_y))
+        if len(self.xy_history) > max(10, config.ANTI_DRIFT_FRAMES):
+            self.xy_history.pop(0)
+            
+        self.y_history.append(norm_y)
+        if len(self.y_history) > 3:
+            self.y_history.pop(0)
+            
+        # Y-Axis Tap Detection
+        self.is_clicking = False
+        if self.click_cooldown > 0:
+            self.click_cooldown -= 1
+            # Maintain frozen coordinates during cooldown to prevent post-click drift
+            if len(self.xy_history) >= config.ANTI_DRIFT_FRAMES:
+                screen_x, screen_y = self.xy_history[-config.ANTI_DRIFT_FRAMES]
+        elif len(self.y_history) >= 2:
+            # Calculate Y velocity
+            y_vel = self.y_history[-1] - self.y_history[-2]
+            
+            # Check for a sharp Y-tap (up or down)
+            if abs(y_vel) > config.Y_TAP_THRESHOLD:
+                # Trigger Click!
+                self.mouse.click()
+                self.click_cooldown = config.CLICK_COOLDOWN_FRAMES
+                self.is_clicking = True
+                
+                # Time-Travel Anti-Drift: Revert to older coordinates
+                if len(self.xy_history) >= config.ANTI_DRIFT_FRAMES:
+                    screen_x, screen_y = self.xy_history[-config.ANTI_DRIFT_FRAMES]
 
         # Move physical cursor (mouse.py handles the strict clamping)
         self.mouse.move(screen_x, screen_y)

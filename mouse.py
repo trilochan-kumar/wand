@@ -26,8 +26,8 @@ class Mouse:
         pyautogui.moveTo(clamped_x, clamped_y)
 
     def click(self, button: str = "left") -> None:
-        """Placeholder for future click interaction implementations."""
-        pass
+        """Executes a single mouse click."""
+        pyautogui.click(button=button)
 
     def drag(self, x: int, y: int) -> None:
         """Placeholder for future drag interaction implementations."""
