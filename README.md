@@ -1,4 +1,5 @@
 # Project Wand
+<img src="icon.png" width="150" align="right">
 
 Project Wand is a highly advanced, camera-based motion engine that turns your hand into a precision cursor control device. It leverages MediaPipe's AI hand tracking and applies custom biomechanical motion mapping to provide an incredibly smooth, trackpad-like experience without needing any physical hardware.
 
@@ -14,11 +15,10 @@ Project Wand is a highly advanced, camera-based motion engine that turns your ha
 ### Option 1: Quick Start (Windows Only)
 The easiest way to use Project Wand is to download the standalone executable. No installation or Python setup is required.
 
-**[⬇️ Download Project Wand (.exe) Direct Link](https://github.com/trilochan-kumar/wand/raw/main/Project_Wand.exe)**
-
-1. Click the link above to download `Project_Wand.exe`.
-2. Double-click the file to run it. (If Windows SmartScreen warns you, click "More info" -> "Run anyway").
-3. Ensure your webcam is connected!
+1. Go to the **Releases** section on the right side of this GitHub page.
+2. Download `Project_Wand.exe`.
+3. Double-click the file to run it. (If Windows SmartScreen warns you, click "More info" -> "Run anyway").
+4. Ensure your webcam is connected!
 
 ### Option 2: Run from Source
 1. Clone this repository:
