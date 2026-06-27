@@ -1,0 +1,6 @@
+wand/
+__pycache__/
+*.pyc
+.env
+telemetry_log.csv
+hand_landmarker.task
